@@ -1,14 +1,7 @@
 const inquirer = require("inquirer");
+const fs = require('fs');
+const generatePage = require('./src/page-template');
 
-// const fs = require('fs');
-
-// const generatePage = require('./src/page-template');
-
-// fs.writeFile('./index.html', generatePage(name, github), err => {
-//   if (err) throw new Error(err);
-
-//   console.log('Portfolio conplete! Check out index.html to see the output!')
-// });
 const promptUser = () => {
   return inquirer
     .prompt([
@@ -86,7 +79,7 @@ Add a New Project
     },
     {
       type: 'input',
-      name: 'descrption',
+      name: 'description',
       message: 'provide a description of the project (Required)',
       validate: descriptionInput => {
         if (descriptionInput) {
@@ -124,7 +117,7 @@ Add a New Project
     },
     {
       type: 'confirm',
-      name: 'confirmAddPrject',
+      name: 'confirmAddProject',
       message: 'Would you like to enter another project?',
       default: 'false'
     }
@@ -142,5 +135,10 @@ Add a New Project
 promptUser()
   .then(promptProject)
   .then(portfolioData => {
-    console.log(portfolioData)
+     const pageHTML = generatePage(portfolioData);
+
+    fs.writeFile('./dist/index.html', pageHTML, err => {
+     if (err) throw new Error(err);
+
+    });
   });
